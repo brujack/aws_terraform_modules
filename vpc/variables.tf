@@ -1,13 +1,3 @@
-# comes from ~/.aws/.tf_aws_creds_home
-variable "aws_access_key" {
-}
-
-variable "aws_secret_key" {
-}
-
-variable "aws_account_id" {
-}
-
 variable "environment_name" {
   description = "Short name for the environment (i.e. bruce_test)"
   default     = "bruce"
@@ -60,4 +50,28 @@ variable "private_subnet_names" {
   description = "Private Subnets name tag"
   type        = list(string)
   default     = []
+}
+
+variable "vpn_gateway_endpoint" {
+  description = "VPN Gateway connection endpoint"
+  type        = string
+  default     = "default"
+}
+
+variable "sg_name_default" {
+  description = "the name of your security group, there will likely be more than 1"
+  type        = string
+  default     = "default"
+}
+
+variable "sg_description_default" {
+  description = "the description of your security group, there will likely be more than 1"
+  type        = string
+  default     = "default all access"
+}
+
+variable "route53_private_zone_name" {
+  description = "Suffix for the private DNS zone - will be"
+  type        = string
+  default     = "default"
 }

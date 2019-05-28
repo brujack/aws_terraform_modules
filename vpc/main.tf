@@ -164,9 +164,9 @@ resource "aws_route_table_association" "private" {
   route_table_id = element(aws_route_table.private.*.id, count.index)
 }
 
-resource "aws_security_group" "sg_1" {
-  name        = var.sg_name_1
-  description = var.sg_description_1
+resource "aws_security_group" "sg_default" {
+  name        = var.sg_name_default
+  description = var.sg_description_default
 
   ingress {
     from_port   = 22
@@ -206,7 +206,7 @@ resource "aws_security_group" "sg_1" {
   vpc_id = aws_vpc.default.id
 
   tags = {
-    Name = var.sg_name_1
+    Name = var.sg_name_default
   }
 }
 
@@ -217,4 +217,3 @@ resource "aws_route53_zone" "primary" {
   }
   comment = var.environment_name
 }
-
