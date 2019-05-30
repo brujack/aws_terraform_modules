@@ -55,7 +55,13 @@ variable "private_subnet_names" {
 variable "vpn_gateway_endpoint" {
   description = "VPN Gateway connection endpoint"
   type        = string
-  default     = "default"
+  default     = {}
+}
+
+variable "home_cidr_block" {
+  description = "home full cidr block"
+  type        = string
+  default     = {}
 }
 
 variable "sg_name_default" {
@@ -73,5 +79,5 @@ variable "sg_description_default" {
 variable "route53_private_zone_name" {
   description = "Suffix for the private DNS zone - will be"
   type        = string
-  default     = "default"
+  default     = {}
 }
