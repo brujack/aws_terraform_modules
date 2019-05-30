@@ -67,7 +67,7 @@ variable "home_cidr_block" {
 variable "sg_name_default" {
   description = "the name of your security group, there will likely be more than 1"
   type        = string
-  default     = "default"
+  default     = "default_one"
 }
 
 variable "sg_description_default" {
