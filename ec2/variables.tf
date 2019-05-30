@@ -1,12 +1,3 @@
-variable "aws_access_key" {
-}
-
-variable "aws_secret_key" {
-}
-
-variable "aws_account_id" {
-}
-
 variable "environment_name" {
   description = "Short name for the environment (i.e. bruce_test)"
   default     = "bruce"
