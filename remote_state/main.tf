@@ -15,7 +15,7 @@ This will automatically push the local state file to a remote s3 bucket for shar
 ######
 
 data "template_file" "terraform-bucket-policy" {
-  template = file("templates/s3-bucket-policy.tpl")
+  template = file("./templates/s3-bucket-policy.tpl")
 
   vars = {
     read_only_user_arn   = aws_iam_user.bruce-read.arn
@@ -25,7 +25,7 @@ data "template_file" "terraform-bucket-policy" {
 }
 
 data "template_file" "bruce-policy" {
-  template = file("templates/s3-user-full-policy.tpl")
+  template = file("./templates/s3-user-full-policy.tpl")
 
   vars = {
     s3_rw_bucket       = var.terraform_bucket_name
@@ -34,7 +34,7 @@ data "template_file" "bruce-policy" {
 }
 
 data "template_file" "bruce-read-policy" {
-  template = file("templates/s3-user-read-policy.tpl")
+  template = file("./templates/s3-user-read-policy.tpl")
 
   vars = {
     s3_ro_bucket       = var.terraform_bucket_name
