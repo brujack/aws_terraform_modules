@@ -1,0 +1,7 @@
+terraform.tfstat*
+.terrafor*
+.kitche*
+.vscod*
+.retr*
+.DS_Store
+terraform-plan
