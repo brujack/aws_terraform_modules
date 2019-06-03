@@ -77,7 +77,8 @@ resource "aws_s3_bucket" "terraform-state-storage-s3-full" {
 
   #policy = data.template_file.terraform-bucket-policy.rendered
   policy = templatefile("${path.module}/templates/s3-bucket-full-policy.tpl", {
-    full_access_user_arn = element(aws_iam_user.rw_access, count.index)
+    #full_access_user_arn = element(aws_iam_user.rw_access, count.index)
+    full_access_user_arn = ["bruce"]
     s3_bucket            = var.terraform_bucket_name
   })
 }
@@ -101,7 +102,8 @@ resource "aws_s3_bucket" "terraform-state-storage-s3-read" {
 
   #policy = data.template_file.terraform-bucket-policy.rendered
   policy = templatefile("${path.module}/templates/s3-bucket-read-policy.tpl", {
-    read_only_user_arn = element(aws_iam_user.read_access, count.index)
+    #read_only_user_arn = element(aws_iam_user.read_access, count.index)
+    read_only_user_arn = ["bruce-read"]
     s3_bucket            = var.terraform_bucket_name
   })
 }

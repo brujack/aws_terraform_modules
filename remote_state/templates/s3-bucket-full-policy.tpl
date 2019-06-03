@@ -5,7 +5,7 @@
             "Sid": "FullAccess",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${full_access_user_arn}"
+                "AWS": ${full_access_user_arn}
             },
             "Action": "s3:*",
             "Resource": [
