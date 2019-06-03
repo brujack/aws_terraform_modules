@@ -42,6 +42,16 @@ This will automatically push the local state file to a remote s3 bucket for shar
 #   }
 # }
 
+# Setup users for full r/w access
+resource "aws_iam_user" "bruce" {
+  name = "bruce"
+}
+
+# Setup users for read access
+resource "aws_iam_user" "bruce-read" {
+  name = "bruce-read"
+}
+
 # terraform state file setup
 # create an S3 bucket to store the state file in
 resource "aws_s3_bucket" "terraform-state-storage-s3" {
