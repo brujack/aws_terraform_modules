@@ -5,7 +5,7 @@ variable "terraform_bucket_name" {
 
 variable "remote_state_full_access_users" {
   description = "User list of users with full r/w access to the remote state file"
-  type        = list(string)
+  type        = any
   default     = []
 }
 
