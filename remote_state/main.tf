@@ -10,28 +10,9 @@ https://medium.com/@jessgreb01/how-to-terraform-locking-state-in-s3-2dc9a5665cb6
 This will automatically push the local state file to a remote s3 bucket for sharing
 */
 
-######
-# S3 policies
-######
-
-# Setup users for full r/w access
-resource "aws_iam_user" "rw_access" {
-  #name = "bruce"
-  count = length(var.remote_state_full_access_users)
-  name = element(var.remote_state_full_access_users, count.index)
-}
-
-# Setup users for read access
-resource "aws_iam_user" "read_access" {
-  #name = "bruce-read"
-  count = length(var.remote_state_read_users)
-  name = element(var.remote_state_read_users, count.index)
-}
-
 # terraform state file setup
 # create an S3 bucket to store the state file in
-resource "aws_s3_bucket" "terraform-state-storage-s3-full" {
-  count = length(var.remote_state_full_access_users)
+resource "aws_s3_bucket" "terraform-state-storage-s3" {
 
   bucket = var.terraform_bucket_name
 
@@ -46,58 +27,6 @@ resource "aws_s3_bucket" "terraform-state-storage-s3-full" {
   tags = {
     Name = "S3 Remote Terraform State Store"
   }
-
-  policy = templatefile("${path.module}/templates/s3-bucket-full-policy.tpl", {
-    full_access_user_arn = element(aws_iam_user.rw_access, count.index)
-    #full_access_user_arn = ["bruce"]
-    s3_bucket            = var.terraform_bucket_name
-  })
-}
-
-resource "aws_s3_bucket" "terraform-state-storage-s3-read" {
-  count = length(var.remote_state_read_users)
-
-  bucket = var.terraform_bucket_name
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-
-  tags = {
-    Name = "S3 Remote Terraform State Store"
-  }
-
-  policy = templatefile("${path.module}/templates/s3-bucket-read-policy.tpl", {
-    read_only_user_arn = element(aws_iam_user.read_access, count.index)
-    #read_only_user_arn = ["bruce-read"]
-    s3_bucket            = var.terraform_bucket_name
-  })
-}
-
-resource "aws_iam_user_policy" "rw_access" {
-  name = "rw_access_users"
-  count = length(var.remote_state_full_access_users)
-  user = element(var.remote_state_full_access_users, count.index)
-
-  policy = templatefile("${path.module}/templates/s3-user-full-policy.tpl", {
-    s3_rw_bucket       = var.terraform_bucket_name
-    dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
-  })
-}
-
-resource "aws_iam_user_policy" "read_access" {
-  name = "read_access_users"
-  count = length(var.remote_state_read_users)
-  user = element(var.remote_state_read_users, count.index)
-
-  policy = templatefile("${path.module}/templates/s3-user-read-policy.tpl", {
-    s3_ro_bucket       = var.terraform_bucket_name
-    dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
-  })
 }
 
 # create a dynamodb table for locking the state file as this is important when sharing the same state file across users
