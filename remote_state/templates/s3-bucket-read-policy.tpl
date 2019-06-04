@@ -5,7 +5,7 @@
             "Sid": "ReadOnly",
             "Effect": "Allow",
             "Principal": {
-                "AWS": ${read_only_user_arn}
+                "AWS": [${read_only_user_arn}]
             },
             "Action": [
                 "s3:Get*",
