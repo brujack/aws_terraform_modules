@@ -14,34 +14,6 @@ This will automatically push the local state file to a remote s3 bucket for shar
 # S3 policies
 ######
 
-# data "template_file" "terraform-bucket-policy" {
-#   template = file("${path.module}/templates/s3-bucket-policy.tpl")
-
-#   vars = {
-#     read_only_user_arn   = aws_iam_user.bruce-read.arn
-#     full_access_user_arn = aws_iam_user.bruce.arn
-#     s3_bucket            = var.terraform_bucket_name
-#   }
-# }
-
-# data "template_file" "bruce-policy" {
-#   template = file("${path.module}/templates/s3-user-full-policy.tpl")
-
-#   vars = {
-#     s3_rw_bucket       = var.terraform_bucket_name
-#     dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
-#   }
-# }
-
-# data "template_file" "bruce-read-policy" {
-#   template = file("${path.module}/templates/s3-user-read-policy.tpl")
-
-#   vars = {
-#     s3_ro_bucket       = var.terraform_bucket_name
-#     dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
-#   }
-# }
-
 # Setup users for full r/w access
 resource "aws_iam_user" "rw_access" {
   #name = "bruce"
@@ -75,10 +47,9 @@ resource "aws_s3_bucket" "terraform-state-storage-s3-full" {
     Name = "S3 Remote Terraform State Store"
   }
 
-  #policy = data.template_file.terraform-bucket-policy.rendered
   policy = templatefile("${path.module}/templates/s3-bucket-full-policy.tpl", {
-    #full_access_user_arn = element(aws_iam_user.rw_access, count.index)
-    full_access_user_arn = ["bruce"]
+    full_access_user_arn = element(aws_iam_user.rw_access, count.index)
+    #full_access_user_arn = ["bruce"]
     s3_bucket            = var.terraform_bucket_name
   })
 }
@@ -100,10 +71,9 @@ resource "aws_s3_bucket" "terraform-state-storage-s3-read" {
     Name = "S3 Remote Terraform State Store"
   }
 
-  #policy = data.template_file.terraform-bucket-policy.rendered
   policy = templatefile("${path.module}/templates/s3-bucket-read-policy.tpl", {
-    #read_only_user_arn = element(aws_iam_user.read_access, count.index)
-    read_only_user_arn = ["bruce-read"]
+    read_only_user_arn = element(aws_iam_user.read_access, count.index)
+    #read_only_user_arn = ["bruce-read"]
     s3_bucket            = var.terraform_bucket_name
   })
 }
@@ -113,7 +83,6 @@ resource "aws_iam_user_policy" "rw_access" {
   count = length(var.remote_state_full_access_users)
   user = element(var.remote_state_full_access_users, count.index)
 
-  #policy = data.template_file.bruce-policy.rendered
   policy = templatefile("${path.module}/templates/s3-user-full-policy.tpl", {
     s3_rw_bucket       = var.terraform_bucket_name
     dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
@@ -125,7 +94,6 @@ resource "aws_iam_user_policy" "read_access" {
   count = length(var.remote_state_read_users)
   user = element(var.remote_state_read_users, count.index)
 
-  #policy = data.template_file.bruce-read-policy.rendered
   policy = templatefile("${path.module}/templates/s3-user-read-policy.tpl", {
     s3_ro_bucket       = var.terraform_bucket_name
     dynamodb_table_arn = aws_dynamodb_table.dynamodb-terraform-state-lock.arn
