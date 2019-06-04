@@ -10,6 +10,7 @@ https://medium.com/@jessgreb01/how-to-terraform-locking-state-in-s3-2dc9a5665cb6
 This will automatically push the local state file to a remote s3 bucket for sharing
 */
 
+
 # terraform state file setup
 # create an S3 bucket to store the state file in
 resource "aws_s3_bucket" "terraform-state-storage-s3" {
