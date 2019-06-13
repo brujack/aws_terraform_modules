@@ -44,7 +44,7 @@ resource "aws_instance" "ubuntu-toolbox" {
 resource "aws_security_group" "ubuntu-toolbox-hosts" {
   name        = "${var.environment_name}-ubuntu-toolbox-sg"
   description = "Default security group for ubuntu-toolbox hosts in ${var.environment_name}"
-  vpc_id      = aws_vpc.default.id
+  vpc_id      = "${module.aws_vpc.default.id}"
 
   #SSH & ICMP & DNS from home
   ingress {
